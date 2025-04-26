@@ -1,6 +1,9 @@
 package model
 
-import "fmt"
+import (
+	"fmt"
+	"time"
+)
 
 type Book struct {
 	ID        int       `bson:"book_id"`
@@ -12,7 +15,7 @@ type Book struct {
 	Ratings   int       `bson:"ratings"`
 	Reviews   int       `bson:"reviews"`
 	Format    Format    `bson:"format"`
-	Published string    `bson:"published"`
+	Published time.Time `bson:"published"`
 	URL       string    `bson:"url"`
 	Embedding []float64 `bson:"embedding"`
 }
@@ -23,5 +26,5 @@ type Format struct {
 }
 
 func (b *Book) Display() {
-	fmt.Printf("BookID: %d\nTitle: %s\nAuthor: %s\nSummary:\n%s\nGenres: %v\nStars: %f\nRatings: %d\nReviews: %d\nPageCount: %d\nType: %s\nPublished: %v\nURL: %s\nEmedding: %v\n", b.ID, b.Title, b.Author, b.Summary, b.Genres, b.Stars, b.Ratings, b.Reviews, b.Format.PageNo, b.Format.Type, b.Published, b.URL, b.Embedding[:10])
+	fmt.Printf("BookID: %d\nTitle: %s\nAuthor: %s\nSummary:\n%s\nGenres: %v\nStars: %f\nRatings: %d\nReviews: %d\nPageCount: %d\nType: %s\nPublished: %v\nURL: %s\n", b.ID, b.Title, b.Author, b.Summary, b.Genres, b.Stars, b.Ratings, b.Reviews, b.Format.PageNo, b.Format.Type, b.Published, b.URL)
 }

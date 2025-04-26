@@ -102,7 +102,7 @@ func FetchBookData(url string, errLog *log.Logger) model.Book {
 		errLog.Printf("format not extracted: %v", err)
 	}
 
-	book.Published, err = fetchDate(page)
+	book.Published, err = fetchDateV2(page)
 
 	if err != nil {
 		errLog.Printf("publication not extracted: %v", err)

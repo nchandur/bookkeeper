@@ -8,7 +8,8 @@ pipeline = [
     {"$group": {
         "_id": "$work.title",
         "ids": {"$addToSet": "$_id"},
-        "count": {"$sum": 1}
+        "count": {"$sum": 1},
+        "maxRating": {"$max": "$work.ratings"}
     }},
     {"$match": {
         "count": {"$gt": 1}

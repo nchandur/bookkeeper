@@ -6,6 +6,7 @@ import (
 	"context"
 	"fmt"
 	"math"
+	"regexp"
 
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -13,27 +14,50 @@ import (
 )
 
 // get document by matching title
-func GetDocument(collection *mongo.Collection, title string) (model.Document, error) {
-	var res model.Document
 
-	filter := bson.M{"work.title": bson.M{
-		"$regex":   title,
-		"$options": "i",
-	}}
-
-	opts := options.Find()
-	opts.SetSort(bson.D{
-		{Key: "work.ratings", Value: -1},
-		{Key: "work.stars", Value: -1},
-	})
-
-	err := collection.FindOne(context.Background(), filter).Decode(&res)
-
-	if err != nil {
-		return res, err
+func GetDocument(ctx context.Context, collection *mongo.Collection, title string) (model.Document, error) {
+	exactRegex := fmt.Sprintf("^%s$", regexp.QuoteMeta(title))
+	exactFilter := bson.M{
+		"work.title": bson.M{
+			"$regex":   exactRegex,
+			"$options": "i",
+		},
 	}
 
-	return res, nil
+	var exactResult model.Document
+	err := collection.FindOne(ctx, exactFilter).Decode(&exactResult)
+	if err == nil {
+		return exactResult, nil
+	}
+	if err != mongo.ErrNoDocuments {
+		return model.Document{}, err
+	}
+
+	substringFilter := bson.M{
+		"work.title": bson.M{
+			"$regex":   title,
+			"$options": "i",
+		},
+	}
+	opts := options.Find().
+		SetSort(bson.D{{Key: "work.title", Value: 1}}).
+		SetLimit(1)
+
+	cursor, err := collection.Find(ctx, substringFilter, opts)
+	if err != nil {
+		return model.Document{}, err
+	}
+	defer cursor.Close(ctx)
+
+	if cursor.Next(ctx) {
+		var substringResult model.Document
+		if err := cursor.Decode(&substringResult); err != nil {
+			return model.Document{}, err
+		}
+		return substringResult, nil
+	}
+
+	return model.Document{}, mongo.ErrNoDocuments
 }
 
 // performs cosine similarity between two vectors
@@ -65,7 +89,7 @@ func GetTopKDocuments(collection *mongo.Collection, title string, topK int) (mod
 		return model.Book{}, nil, fmt.Errorf("empty title")
 	}
 
-	input, err := GetDocument(collection, title)
+	input, err := GetDocument(ctx, collection, title)
 
 	if err != nil {
 		return model.Book{}, nil, err

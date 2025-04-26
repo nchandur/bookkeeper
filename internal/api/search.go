@@ -3,6 +3,7 @@ package api
 import (
 	"bookkeeper/internal/db"
 	"bookkeeper/internal/recommend"
+	"context"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -21,7 +22,7 @@ func SearchHandler(r *gin.Engine) {
 		}
 
 		collection := db.Client.Database("booksV2").Collection("works")
-		doc, err := recommend.GetDocument(collection, title)
+		doc, err := recommend.GetDocument(context.TODO(), collection, title)
 
 		if err != nil {
 			ctx.JSON(http.StatusNoContent, gin.H{

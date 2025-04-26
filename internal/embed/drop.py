@@ -1,5 +1,6 @@
 from pymongo import MongoClient
 from langdetect import detect, DetectorFactory
+import re
 
 DetectorFactory.seed = 0
 
@@ -12,8 +13,6 @@ cursor = collection.find({})
 count = 0
 exceptionCount = 0
 docCount = 0
-
-exceptionStr = ""
 
 for doc in cursor:
     work = doc.get('work', {})
@@ -29,8 +28,9 @@ for doc in cursor:
         nonEnglishFlag = summaryLang != 'en'
         ratingsFlag = ratings == -1
         boxedFlag = "box set" in title.lower() or "boxed set" in title.lower()
+        libraryFlag = re.match(r"^Librarian's note", summary, re.I)
 
-        if nonEnglishFlag or ratingsFlag or boxedFlag :
+        if nonEnglishFlag or ratingsFlag or boxedFlag or libraryFlag:
             collection.delete_one({"_id": doc["_id"]})
             count += 1
 
