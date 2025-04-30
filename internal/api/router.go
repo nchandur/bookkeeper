@@ -9,6 +9,7 @@ func SetUpRouter() *gin.Engine {
 	PingHandler(r)
 	SearchHandler(r)
 	RecommendByTitleHandler(r)
+	AuthorHandler(r)
 
 	return r
 

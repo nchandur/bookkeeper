@@ -5,6 +5,7 @@ import (
 	"bookkeeper/internal/model"
 	"bookkeeper/internal/scraper"
 	"context"
+	"fmt"
 	"log"
 	"os"
 	"time"
@@ -42,7 +43,7 @@ func main() {
 		infoLog.Printf("fetched links from %s", pageURL)
 	}
 
-	for _, link := range links {
+	for idx, link := range links {
 
 		book := scraper.FetchBookData(link, errLog)
 		book.URL = link
@@ -60,9 +61,11 @@ func main() {
 			infoLog.Printf("successfully pushed %s to db", book.Title)
 		}
 		time.Sleep(5 * time.Second)
+		fmt.Printf("\r%d books scraped", idx+1)
 
 	}
 
+	fmt.Println()
 	infoLog.Printf("extraction complete")
 
 }

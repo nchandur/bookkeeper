@@ -6,23 +6,23 @@ import (
 )
 
 type Book struct {
-	ID        int       `bson:"book_id"`
-	Title     string    `bson:"title"`
-	Author    string    `bson:"author"`
-	Summary   string    `bson:"summary"`
-	Genres    []string  `bson:"genres"`
-	Stars     float64   `bson:"stars"`
-	Ratings   int       `bson:"ratings"`
-	Reviews   int       `bson:"reviews"`
-	Format    Format    `bson:"format"`
-	Published time.Time `bson:"published"`
-	URL       string    `bson:"url"`
-	Embedding []float64 `bson:"embedding"`
+	ID        int       `json:"book_id" bson:"book_id"`
+	Title     string    `json:"title" bson:"title"`
+	Author    string    `json:"author" bson:"author"`
+	Summary   string    `json:"summary" bson:"summary"`
+	Genres    []string  `json:"genres" bson:"genres"`
+	Stars     float64   `json:"stars" bson:"stars"`
+	Ratings   int       `json:"ratings" bson:"ratings"`
+	Reviews   int       `json:"reviews" bson:"reviews"`
+	Format    Format    `json:"format" bson:"format"`
+	Published time.Time `json:"published" bson:"published"`
+	URL       string    `json:"url" bson:"url"`
+	Embedding []float64 `json:"embedding" bson:"embedding"`
 }
 
 type Format struct {
-	PageNo int    `bson:"page_no"`
-	Type   string `bson:"type"`
+	PageNo int    `json:"page_no" bson:"page_no"`
+	Type   string `json:"type" bson:"type"`
 }
 
 func (b *Book) Display() {

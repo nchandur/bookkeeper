@@ -1,11 +1,11 @@
 package model
 
 type Document struct {
-	Source string `bson:"source"`
-	Work   Book   `bson:"work"`
+	Source string `json:"source" bson:"source"`
+	Work   Book   `json:"work" bson:"work"`
 }
 
 type ScoredDocument struct {
-	Doc   Document `bson:"document"`
-	Score float64  `bson:"score"`
+	Doc   Document `json:"document" bson:"document"`
+	Score float64  `json:"score" bson:"score"`
 }

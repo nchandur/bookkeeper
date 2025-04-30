@@ -27,7 +27,7 @@ for doc in cursor:
         summaryLang = detect(summary)
         nonEnglishFlag = summaryLang != 'en'
         ratingsFlag = ratings == -1
-        boxedFlag = "box set" in title.lower() or "boxed set" in title.lower()
+        boxedFlag = "box set" in title.lower() or "boxed set" in title.lower() or "boxset" in title.lower()
         libraryFlag = re.match(r"^Librarian's note", summary, re.I)
 
         if nonEnglishFlag or ratingsFlag or boxedFlag or libraryFlag:
