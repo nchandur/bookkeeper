@@ -1,5 +1,6 @@
 from pymongo import MongoClient
 from sentence_transformers import SentenceTransformer
+import numpy as np
 from time import perf_counter
 import re
 
@@ -7,8 +8,8 @@ client = MongoClient("mongodb://localhost:27017")
 db = client["booksV2"]
 collection = db["works"]
 
-model = SentenceTransformer('all-mpnet-base-v2')
-# model = SentenceTransformer('all-MiniLM-L6-v2')
+# model = SentenceTransformer('all-mpnet-base-v2')
+model = SentenceTransformer('all-MiniLM-L6-v2')
 # model = SentenceTransformer('BAAI/bge-large-zh-v1.5')
 
 

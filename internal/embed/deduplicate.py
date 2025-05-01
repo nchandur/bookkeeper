@@ -5,15 +5,21 @@ db = client["booksV2"]
 collection = db["works"]
 
 pipeline = [
-    {"$group": {
-        "_id": "$work.title",
-        "ids": {"$addToSet": "$_id"},
-        "count": {"$sum": 1},
-        "maxRating": {"$max": "$work.ratings"}
-    }},
-    {"$match": {
-        "count": {"$gt": 1}
-    }}
+    {
+        "$group": {
+            "_id": {
+                "title": "$work.title",
+                "author": "$work.author"
+            },
+            "ids": {"$addToSet": "$_id"},
+            "count": {"$sum": 1}
+        }
+    },
+    {
+        "$match": {
+            "count": {"$gt": 1}
+        }
+    }
 ]
 
 duplicates = collection.aggregate(pipeline)

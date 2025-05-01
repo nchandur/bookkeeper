@@ -22,17 +22,19 @@ for doc in cursor:
     ratings = work.get('ratings', "")
 
 
+    try:
+        if len(summary) > 0:
+            summaryLang = detect(summary)
+            nonEnglishFlag = summaryLang != 'en'
+            ratingsFlag = ratings == -1
+            boxedFlag = "box set" in title.lower() or "boxed set" in title.lower() or "boxset" in title.lower()
+            libraryFlag = re.match(r"^Librarian's note", summary, re.I)
 
-    if len(summary) > 0:
-        summaryLang = detect(summary)
-        nonEnglishFlag = summaryLang != 'en'
-        ratingsFlag = ratings == -1
-        boxedFlag = "box set" in title.lower() or "boxed set" in title.lower() or "boxset" in title.lower()
-        libraryFlag = re.match(r"^Librarian's note", summary, re.I)
-
-        if nonEnglishFlag or ratingsFlag or boxedFlag or libraryFlag:
-            collection.delete_one({"_id": doc["_id"]})
-            count += 1
+            if nonEnglishFlag or ratingsFlag or boxedFlag or libraryFlag:
+                collection.delete_one({"_id": doc["_id"]})
+                count += 1
+    except:
+        pass
 
     docCount += 1
 

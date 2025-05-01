@@ -95,8 +95,6 @@ func GetTopKDocuments(collection *mongo.Collection, title string, topK int) (mod
 		return model.Book{}, nil, err
 	}
 
-	fmt.Println("retrieved book with title: ", input.Work.Title)
-
 	var cur *mongo.Cursor
 
 	cur, err = collection.Find(ctx, bson.M{})
@@ -104,8 +102,6 @@ func GetTopKDocuments(collection *mongo.Collection, title string, topK int) (mod
 	if err != nil {
 		return model.Book{}, nil, err
 	}
-
-	count := 0
 
 	for cur.Next(ctx) {
 		var doc model.Document
@@ -117,12 +113,8 @@ func GetTopKDocuments(collection *mongo.Collection, title string, topK int) (mod
 			InsertIntoQueue(pq, model.ScoredDocument{Doc: doc, Score: cosSim}, topK)
 
 		}
-
-		count++
-		fmt.Printf("\r%d documents traversed...", count)
 	}
 
-	fmt.Printf("\n\n")
 	cur.Close(ctx)
 
 	topDocs := make([]model.ScoredDocument, pq.Len())
